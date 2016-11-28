@@ -2,7 +2,7 @@
 var webdb = {};
 webdb.db = null;
 
-// Función para crear la base de datos
+// Método para crear la base de datos
 webdb.open = function(options) 
 {
 	if (typeof openDatabase == "undefined") {
@@ -11,11 +11,11 @@ webdb.open = function(options)
 	}
 
 	// Opciones por defecto
-	var options = options || {};
-	options.name = options.name || 'noname';
-	options.mb = options.mb || 5;
+	var options         = options || {};
+	options.name        = options.name || 'noname';
+	options.mb          = options.mb || 5;
 	options.description = options.description || 'no description';
-	options.version = options.version || '1.0';
+	options.version     = options.version || '1.0';
 
 	// Definimos el tamaño en MB
 	var dbSize = options.mb * 1024 * 1024;
@@ -24,7 +24,7 @@ webdb.open = function(options)
 	webdb.db = openDatabase(options.name, options.version, options.description, dbSize);
 }
 
-// Ejecutamos consulta
+// Método para ejecutar consulta
 webdb.executeSql = function(sql, data, onSuccess, onError)
 {
 	if (!webdb.db) return;
@@ -51,7 +51,7 @@ function tratarError(tx, e)
 
 function limpiarCampos()
 {
-  document.getElementById("id").value = "";
+  document.getElementById("id").value    = "";
   document.getElementById("texto").value = "";
 }
 
@@ -78,6 +78,12 @@ function cargarNotas()
     tratarError
   );    
 }
+
+function onSave(){
+  cargarNotas();
+  limpiarCampos();
+}
+
 function obtenerContenidoNota(id, texto)
 {
   var newitem = "<div class='row' id='" + id + "'>" + 
@@ -107,20 +113,14 @@ function guardar()
   if(_id.value == "" || _id.value == undefined){
 
     webdb.executeSql('INSERT INTO nota (texto, added_on) VALUES (?,?)', [_texto.value, new Date()],
-		function(tx, r){
-			cargarNotas();
-			limpiarCampos();
-		},
+		onSave,
 		tratarError
     );    
     
   }else{
 
     webdb.executeSql('UPDATE nota SET texto = ? WHERE id = ?', [_texto.value, _id.value],
-		function(tx, r){
-			cargarNotas();
-			limpiarCampos();
-		},
+		onSave,
 		tratarError
     );    
     
@@ -131,10 +131,10 @@ function guardar()
 function modoEdicion(id)
 {
   //Busco texto de la nota
-  webdb.executeSql('SELECT * FROM  nota where id = ?', [id],
+  webdb.executeSql('SELECT texto FROM  nota where id = ?', [id],
     function(tx, r){
       var _item = r.rows.item(0);
-      document.getElementById("id").value = _item.id;
+      document.getElementById("id").value = id;
       document.getElementById("texto").value = _item.texto;
     },
     tratarError
