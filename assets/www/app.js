@@ -65,7 +65,7 @@ function cargarNotas()
         var _contenido = ""; 
         
         if(r.rows.length == 0){
-          _contenido = "<span style='font-style:italic'>No hay notas para mostrar</span>";
+          _contenido = "<span style='font-style: italic'>No hay notas para mostrar</span>";
         }
                
         for(var i = 0; i<r.rows.length; i++){
@@ -78,15 +78,22 @@ function cargarNotas()
     tratarError
   );    
 }
- 
 function obtenerContenidoNota(id, texto)
 {
-  var newitem = "<span id='" + id + "'>" + 
+  var newitem = "<div class='row' id='" + id + "'>" + 
+                  "<div class='col-md-9'>" +
                   texto +
-                  "<br>" +  
-                  "<button onclick='modoEdicion(" + id + ");'>Editar</button>" +
-                  "<button onclick='borrar(" + id + ");'>Borrar</button>" + 
-				"</span><hr>";
+                  "</div>" + 
+                  "<div class='col-md-3'>" +
+                  "<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>" +
+                  "  <span class='glyphicon glyphicon-option-vertical'></span>" +
+                  "</button>" +
+                  "<ul class='dropdown-menu'>" +
+                  "  <li><a href='#' onclick='modoEdicion(" + id + ");'>Editar</a></li>" +
+                  "  <li><a href='#' onclick='borrar(" + id + ");'>Eliminar</a></li>" +
+                  "</ul>" +  
+                  "</div>" + 
+				        "</div><hr>";
   return newitem;
 }
 
