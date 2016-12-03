@@ -33,13 +33,18 @@
       
       <div class="row">
         <div class="col-md-12">          
-          <button class='btn btn-primary btn-block' onclick="guardar()">Guardar</button>
+          <button id="btnguardar" class='btn btn-primary btn-block' onclick="guardar()">Guardar</button>
         </div>
-      </div>      
+      </div>
 
       <div class="row">
         <div class="col-md-12"> 
           <hr>  
+          <div class="alert alert-danger" role="alert" id="errorcontainer" style="display: none;">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Lo sentimos, el navegador no soporta openDatabase.
+          </div>
         </div>
       </div>      
       

@@ -6,7 +6,9 @@ webdb.db = null;
 webdb.open = function(options) 
 {
 	if (typeof openDatabase == "undefined") {
-		alert("El navegador no soporta openDatabase");
+		//alert("Lo sentimos, el navegador no soporta openDatabase.");
+    document.getElementById("btnguardar").disabled = true;
+    document.getElementById("errorcontainer").style.display = '';
 		return;
 	}
 
