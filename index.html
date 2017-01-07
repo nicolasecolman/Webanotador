@@ -17,7 +17,7 @@
 <body>
 
   <div class="container">
-    <form>
+    <form name="myForm">
 
       <div class="row">
         <div class="col-md-12"> 
@@ -26,14 +26,16 @@
       
       <div class="row">
         <div class="col-md-12">
-          <input type="hidden" id="id">
-          <textarea id="texto" class="form-control" placeholder="..."></textarea>
+          <input type="hidden" id="id" data-ng-model="note.id">
+          <textarea id="texto" class="form-control" placeholder="..." data-ng-model="note.texto" data-ng-required="true"></textarea>
         </div>
       </div>
       
       <div class="row">
         <div class="col-md-12">          
-          <button id="btnguardar" class='btn btn-primary btn-block' ng-click="save()" ng-show="databaseSupport">Guardar</button>
+          <button id="btnguardar" class='btn btn-primary btn-block' ng-click="save()" ng-show="databaseSupport" ng-disabled="!myForm.$valid">
+            Guardar
+          </button>
         </div>
       </div>
 
@@ -50,23 +52,22 @@
       
     </form>
     
-    <div id="notas" >
+    <div>
 
       <div class='row' data-ng-repeat="note in notes track by $index">
-        <!--id="{{note.id}}"-->
         <div class='col-md-9'>
-        {{note.texto}}
+          {{note.texto}}
+          <hr>
         </div>
-        <div class='col-md-3'>
+        <div class='col-md-3' data-ng-show="note.id!=undefined">
           <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
             <span class='glyphicon glyphicon-option-vertical'></span>
           </button>
           <ul class='dropdown-menu'>
-            <!--li><a href='#' onclick='modoEdicion("{{note.id}}");'>Editar</a></li>
-            <li><a href='#' onclick='borrar("{{note.id}}");'>Eliminar</a></li-->
+            <li><a href='#' data-ng-click='view(note);'>Editar</a></li>
+            <li><a href='#' data-ng-click="delete(note)">Eliminar</a></li>
           </ul>
         </div>
-        <hr>
       </div>
 
     </div>

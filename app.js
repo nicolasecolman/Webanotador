@@ -57,34 +57,75 @@ angular
   .controller('homeController', function(webdb, $log, $scope){
     //$scope = this;  //Haciendolo asi no soporta $scope.$apply
 
-    $scope.databaseSupport = true;
-    $scope.notes = [];
+	$scope.databaseSupport = webdb.supported;
+	$scope.notes = [];
 
     $scope.save = function(){
+		var _id = $scope.note.id;
+		var _texto = $scope.note.texto; 
+
+		// Insertamos un nuevo elemento o editamos el actual
+		if(_id == "" || _id == undefined){
+
+			webdb.executeSql('INSERT INTO nota (texto, added_on) VALUES (?,?)', [_texto, new Date()],
+			function(){ $scope.note = undefined; load() },
+			tratarError
+			);    
+
+		}else{
+
+			webdb.executeSql('UPDATE nota SET texto = ? WHERE id = ?', [_texto, _id],
+			function(){ $scope.note = undefined; load() },
+			tratarError
+			);    
+
+		}
     }
 
+    $scope.delete = function(note){
+    	var id = note.id;
+		if(!confirm("¿Confirma el borrado de la nota?")) return; 
+
+		webdb.executeSql('delete from nota where id = ?', [id],
+			load,
+			tratarError
+		); 
+    }
+
+    $scope.view = function (note){
+		//Busco texto de la nota
+		/*webdb.executeSql('SELECT texto FROM  nota where id = ?', [id],
+			function(tx, r){
+				var _item = r.rows.item(0);
+				document.getElementById("id").value = id;
+				document.getElementById("texto").value = _item.texto;
+			},
+			tratarError
+		); */
+		$scope.note = angular.copy(note);
+	}
+ 
+
     function load(){
-    	if(!webdb.supported){
-    		$scope.databaseSupport = false;
-    	}
 
-	  //Busco datos
-	  webdb.executeSql('SELECT * FROM nota order by id desc', [],
-	  	function(tx, r){
-	        
-	        if(r.rows.length == 0){
-	          r.rows.item(0) = {text: "<span style='font-style: italic'>No hay notas para mostrar</span>"}; 
-	        }
+    	$scope.notes = [];
 
-	        for(var i = 0; i<r.rows.length; i++){
-				var _item = r.rows.item(i);
-				$scope.notes.push( _item );
-	        }
-	        
-	        $scope.$apply(function(){});
-	  	},
-	    tratarError
-	  );    
+		//Busco datos
+		webdb.executeSql('SELECT * FROM nota order by id desc', [],
+			function(tx, r){
+
+				if(r.rows.length == 0){
+					$scope.notes.push( { text: "<span style='font-style: italic'>No hay notas para mostrar</span>" } );
+				}
+
+				for(var i = 0; i<r.rows.length; i++){
+					$scope.notes.push( r.rows.item(i) );
+				}
+
+				$scope.$apply();
+			},
+			tratarError
+		);    
     }
 
     load();
