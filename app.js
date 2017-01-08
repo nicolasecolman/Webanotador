@@ -115,7 +115,7 @@ angular
 			function(tx, r){
 
 				if(r.rows.length == 0){
-					$scope.notes.push( { text: "<span style='font-style: italic'>No hay notas para mostrar</span>" } );
+					$scope.notes.push( { texto: "No hay notas para mostrar" } );
 				}
 
 				for(var i = 0; i<r.rows.length; i++){
