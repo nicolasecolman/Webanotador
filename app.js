@@ -10,9 +10,7 @@ angular
 	webdb.open = function(options) 
 	{
 		if (typeof openDatabase == "undefined") {
-		    //document.getElementById("btnguardar").disabled = true;
-		    //document.getElementById("errorcontainer").style.display = '';
-		    webdb.supported = false;
+			webdb.supported = false;
 			return;
 		}
 
@@ -46,21 +44,22 @@ angular
 	// Abrimos la base de datos
 	webdb.open(opt);
 
-	function tratarError(e){
+	function tratarError(e)
+	{
 		throw "Error al crear base de datos: " + e;
 	}
+	
 	// Creamos la tabla (si no existe)
 	webdb.executeSql('CREATE TABLE IF NOT EXISTS nota (id INTEGER PRIMARY KEY ASC, texto TEXT, added_on DATETIME)', [],	function(tx, r){}, tratarError);  
 
 	return webdb;
   })
   .controller('homeController', function(webdb, $log, $scope){
-    //$scope = this;  //Haciendolo asi no soporta $scope.$apply
 
 	$scope.databaseSupport = webdb.supported;
 	$scope.notes = [];
 
-    $scope.save = function(){
+	$scope.save = function(){
 		var _id = $scope.note.id;
 		var _texto = $scope.note.texto; 
 
@@ -80,9 +79,9 @@ angular
 			);    
 
 		}
-    }
+	}
 
-    $scope.delete = function(note){
+	$scope.delete = function(note){
     	var id = note.id;
 		if(!confirm("¿Confirma el borrado de la nota?")) return; 
 
@@ -92,7 +91,7 @@ angular
 		); 
     }
 
-    $scope.view = function (note){
+	$scope.view = function (note){
 		//Busco texto de la nota
 		/*webdb.executeSql('SELECT texto FROM  nota where id = ?', [id],
 			function(tx, r){
@@ -103,10 +102,10 @@ angular
 			tratarError
 		); */
 		$scope.note = angular.copy(note);
-	}
- 
+	} 
 
-    function load(){
+	function load()
+	{
 
     	$scope.notes = [];
 
@@ -125,11 +124,11 @@ angular
 				$scope.$apply();
 			},
 			tratarError
-		);    
-    }
+		);
+	}
 
-    load();
+	load();
 
     function tratarError(){}
 
-  })
+  });
