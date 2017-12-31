@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html ng-app="app" ng-controller="homeController as scope">
+<html data-ng-app="app" data-ng-controller="homeController as scope">
 
 <head>
+  <title>Web Anotador</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,7 +34,7 @@
       
       <div class="row">
         <div class="col-md-12">          
-          <button id="btnguardar" class='btn btn-primary btn-block' ng-click="save()" ng-show="databaseSupport" ng-disabled="!myForm.$valid">
+          <button id="btnguardar" class='btn btn-primary btn-block' data-ng-click="save()" data-ng-show="databaseSupport" data-ng-disabled="!myForm.$valid">
             Guardar
           </button>
         </div>
@@ -42,7 +43,7 @@
       <div class="row">
         <div class="col-md-12"> 
           <hr>  
-          <div class="alert alert-danger" role="alert" id="errorcontainer" ng-show="!databaseSupport">
+          <div class="alert alert-danger" role="alert" data-ng-show="!databaseSupport">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
             Lo sentimos, el navegador no soporta openDatabase.
@@ -73,10 +74,10 @@
     </div>
 
   </div>
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js" ></script>
-  <script type="text/javascript" src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/js/bootstrap-dropdown.js"></script>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
-  <script type="text/javascript" src="app.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js" ></script>
+  <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/js/bootstrap-dropdown.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
