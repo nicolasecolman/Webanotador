@@ -99,7 +99,18 @@ angular
 				);	
 			}					
 		});
-	}
+	};
+
+	/**
+	 * Deletes a note
+	 * @param {integer} _id 
+	 * @returns {Promise}
+	 */
+	webdb.deleteNote = function(_id) {
+		return new Promise(function(resolve, reject) {
+			webdb.executeSql('delete from nota where id = ?', [_id], resolve, reject);
+		});
+	};
 
 	return webdb;
   })
@@ -123,13 +134,10 @@ angular
     	var id = note.id;
 		if(!confirm("¿Confirma el borrado de la nota?")) return; 
 
-		webdb.executeSql('delete from nota where id = ?', [id],
-			load,
-			tratarError
-		); 
+		webdb.deleteNote(id).then(load, tratarError);
     }
 
-	$scope.view = function (note){
+	$scope.view = function(note){
 		//Busco texto de la nota
 		/*webdb.executeSql('SELECT texto FROM  nota where id = ?', [id],
 			function(tx, r){
@@ -142,8 +150,7 @@ angular
 		$scope.note = angular.copy(note);
 	} 
 
-	function load()
-	{
+	function load(){
 
     	$scope.notes = [];
 
