@@ -32,8 +32,10 @@ angular
 	webdb.executeSql = function(sql, data, onSuccess, onError)
 	{
 		if (!webdb.db) return;
-		webdb.db.transaction(function(tx){tx.executeSql(sql, data, onSuccess, onError);});
-	}
+		webdb.db.transaction(function(tx){
+			tx.executeSql(sql, data, onSuccess, onError);
+		});
+	};
 
 	var opt = {
 		name: "nota",
@@ -50,7 +52,24 @@ angular
 	}
 	
 	// Creamos la tabla (si no existe)
-	webdb.executeSql('CREATE TABLE IF NOT EXISTS nota (id INTEGER PRIMARY KEY ASC, texto TEXT, added_on DATETIME)', [],	function(tx, r){}, tratarError);  
+	webdb.executeSql('CREATE TABLE IF NOT EXISTS nota (id INTEGER PRIMARY KEY ASC, texto TEXT, added_on DATETIME)', [],	function(tx, r){}, tratarError);
+	
+	/**
+	 * Searchs notes in the database
+	 * returns Promise (SQLResultSetRowList)
+	 */
+	webdb.getNotes = function() {
+		return new Promise(function(resolve, reject) {
+			webdb.executeSql('SELECT * FROM nota order by id desc', [], 
+				function(tx, r) {
+					resolve(r.rows);
+				},
+				function() {
+					reject('There was an error.');
+				}
+			);
+		});
+	};
 
 	return webdb;
   })
@@ -109,22 +128,19 @@ angular
 
     	$scope.notes = [];
 
-		//Busco datos
-		webdb.executeSql('SELECT * FROM nota order by id desc', [],
-			function(tx, r){
+		webdb.getNotes().then(function(rows){ 
+			
+			if(rows.length == 0){
+				$scope.notes.push( { texto: "No hay notas para mostrar..." } );
+			}
 
-				if(r.rows.length == 0){
-					$scope.notes.push( { texto: "No hay notas para mostrar" } );
-				}
+			for(var i = 0; i<rows.length; i++){
+				$scope.notes.push( rows.item(i) );
+			}
 
-				for(var i = 0; i<r.rows.length; i++){
-					$scope.notes.push( r.rows.item(i) );
-				}
-
-				$scope.$apply();
-			},
-			tratarError
-		);
+			$scope.$apply();
+		})
+		.catch(tratarError);
 	}
 
 	load();
