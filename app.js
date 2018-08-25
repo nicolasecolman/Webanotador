@@ -56,7 +56,7 @@ angular
 	
 	/**
 	 * Searchs notes in the database
-	 * returns Promise (SQLResultSetRowList)
+	 * @returns {Promise} (SQLResultSetRowList)
 	 */
 	webdb.getNotes = function() {
 		return new Promise(function(resolve, reject) {
@@ -71,6 +71,36 @@ angular
 		});
 	};
 
+	/**
+	 * Inserts or updates a note
+	 * @param {integer} _id 
+	 * @param {string} _texto 
+	 * @returns {Promise}
+	 */
+	webdb.saveNote = function(_id, _texto) {
+		return new Promise(function(resolve, reject) {			
+			if(_id == "" || _id == undefined){
+				webdb.executeSql('INSERT INTO nota (texto, added_on) VALUES (?,?)', [_texto, new Date()],
+					function(tx, r) {
+						resolve();
+					},
+					function() {
+						reject('There was an error.');
+					}
+				);
+			}else{	
+				webdb.executeSql('UPDATE nota SET texto = ? WHERE id = ?', [_texto, _id],
+					function(tx, r) {
+						resolve();
+					},
+					function() {
+						reject('There was an error.');
+					}
+				);	
+			}					
+		});
+	}
+
 	return webdb;
   })
   .controller('homeController', function(webdb, $log, $scope){
@@ -82,22 +112,11 @@ angular
 		var _id = $scope.note.id;
 		var _texto = $scope.note.texto; 
 
-		// Insertamos un nuevo elemento o editamos el actual
-		if(_id == "" || _id == undefined){
+		webdb.saveNote(_id, _texto).then(function() { 
+			$scope.note = undefined; 
+			load(); 
+		}, tratarError);
 
-			webdb.executeSql('INSERT INTO nota (texto, added_on) VALUES (?,?)', [_texto, new Date()],
-			function(){ $scope.note = undefined; load() },
-			tratarError
-			);    
-
-		}else{
-
-			webdb.executeSql('UPDATE nota SET texto = ? WHERE id = ?', [_texto, _id],
-			function(){ $scope.note = undefined; load() },
-			tratarError
-			);    
-
-		}
 	}
 
 	$scope.delete = function(note){
